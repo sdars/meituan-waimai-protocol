@@ -58,7 +58,7 @@ def main():
     st, body = post(client, PATHS["getwxinfo"], {"code": code, "appName": cfg.app_name})
     print("[getwxinfo] HTTP %s openid? %s" % (st, "openidCipher" in body))
 
-    # --- 2) silentLogin 对照 ---
+    # --- 2) silentLogin 对照 (两个分支都测) ---
     real_fp = client.build_wechat_fingerprint()
     rand_fp = base64.b64encode(os.urandom(180)).decode()
     cases = [
@@ -66,20 +66,26 @@ def main():
         ("random-b64-240", rand_fp),
         ("real-generator", real_fp),
     ]
-    for tag, fp in cases:
-        code = get_wx_login_code(APP_ID)
-        st, body = post(client, PATHS["wxslientlogin"],
-                        {"wechatFingerprint": fp, "code": code})
-        err = None
-        tok = False
-        try:
-            j = json.loads(body)
-            err = j.get("error")
-            tok = bool((j.get("data") or {}).get("token"))
-        except Exception:  # noqa: BLE001
-            pass
-        print("[silent:%s] fp_len=%d HTTP %s token=%s error=%s"
-              % (tag, len(fp), st, tok, err))
+    # wxslientlogin (weappsilentlogin) 与 newwxsilentlogin (weappsilentloginembedded)
+    branches = [
+        ("weappsilentlogin", PATHS["wxslientlogin"]),
+        ("weappsilentloginembedded", PATHS["newwxsilentlogin"]),
+    ]
+    for pathname, path in branches:
+        for tag, fp in cases:
+            code = get_wx_login_code(APP_ID)
+            st, body = post(client, path,
+                            {"wechatFingerprint": fp, "code": code})
+            err = None
+            tok = False
+            try:
+                j = json.loads(body)
+                err = j.get("error")
+                tok = bool((j.get("data") or {}).get("token"))
+            except Exception:  # noqa: BLE001
+                pass
+            print("[%s|%s] fp_len=%d HTTP %s token=%s error=%s"
+                  % (pathname, tag, len(fp), st, tok, err))
 
 
 if __name__ == "__main__":
