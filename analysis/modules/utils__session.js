@@ -1,0 +1,3 @@
+define("utils/session.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var n={id:""},i=function(i){i&&"string"==typeof i&&(n.id=i)};module.exports={getSessionId:function(t,r){if(void 0===t&&(t="12345689ABCDEGHJKLMNPQRSTUVWXYZ"),void 0===r&&(r=6),n.id)return n.id;var e=new Array(r).fill().map((function(){return t[Math.round(Math.random()*(t.length-1))]})).join("");return i(e),e},setSessionId:i};
+},{isPage:false,isComponent:false,currentFile:'utils/session.js'});

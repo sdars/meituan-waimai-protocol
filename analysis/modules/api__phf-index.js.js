@@ -1,0 +1,3 @@
+define("api/phf-index.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e=require("../npm/babel/runtime7_2_0/helpers/interopRequireDefault")(require("./index")),a=require("./pay-inject"),p=e.default.api_phf.pay;e.default.api_phf.pay=a(p);var i=e.default.apiDynamic,r=e.default.ready;e.default.api_phf.apiDynamic=i,e.default.api_phf.ready=r,module.exports=e.default.api_phf;
+},{isPage:false,isComponent:false,currentFile:'api/phf-index.js'});

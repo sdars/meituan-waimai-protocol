@@ -1,0 +1,3 @@
+define("utils/mmbApi.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e=require("../npm/babel/runtime7_2_0/helpers/interopRequireDefault")(require("../npm/babel/runtime7_2_0/helpers/extends")),i=require("../api/index"),r=require("../api/phf-api"),t=require("../api/activity-api"),p=Object.create(null),a=function(e,r){var t=p[e];return t||(t=i.apiDynamic(e),p[e]=t),t(r)};module.exports=function(p){p.extend("wmApi",a),p.extend("deprecatedApi",(0,e.default)({},i,{phfApi:r,activityApi:t}))};
+},{isPage:false,isComponent:false,currentFile:'utils/mmbApi.js'});

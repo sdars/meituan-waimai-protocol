@@ -1,0 +1,3 @@
+define("api/ignoreErrUri.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";exports.__esModule=!0,exports.default=void 0;exports.default={"/weapp/v1/user/allowance/entry":!0,"/weapp/v1/guide/collect":!0,"/weapp/v1/wlwc/homepageicon":!0};
+},{isPage:false,isComponent:false,currentFile:'api/ignoreErrUri.js'});

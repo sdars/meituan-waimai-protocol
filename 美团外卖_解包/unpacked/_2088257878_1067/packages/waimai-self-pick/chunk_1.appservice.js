@@ -1,0 +1,85 @@
+$gwx47_XC_1=function(_,_v,_n,_p,_s,_wp,_wl,$gwn,$gwl,$gwh,wh,$gstack,$gwrt,gra,grb,TestTest,wfor,_ca,_da,_r,_rz,_o,_oz,_1,_1z,_2,_2z,_m,_mz,nv_getDate,nv_getRegExp,nv_console,nv_parseInt,nv_parseFloat,nv_isNaN,nv_isFinite,nv_decodeURI,nv_decodeURIComponent,nv_encodeURI,nv_encodeURIComponent,$gdc,nv_JSON,_af,_gv,_ai,_grp,_gd,_gapi,$ixc,_ic,_w,_ev,_tsd){return function(path,global){
+if(typeof global==='undefined'){if (typeof __GWX_GLOBAL__==='undefined')global={};else global=__GWX_GLOBAL__;}if(typeof __WXML_GLOBAL__ === 'undefined') {__WXML_GLOBAL__={};
+}__WXML_GLOBAL__.modules = __WXML_GLOBAL__.modules || {};
+var e_={}
+if(typeof(global.entrys)==='undefined')global.entrys={};e_=global.entrys;
+var d_={}
+if(typeof(global.defines)==='undefined')global.defines={};d_=global.defines;
+var f_={}
+if(typeof(global.modules)==='undefined')global.modules={};f_=global.modules || {};
+var p_={}
+__WXML_GLOBAL__.ops_cached = __WXML_GLOBAL__.ops_cached || {}
+__WXML_GLOBAL__.ops_set = __WXML_GLOBAL__.ops_set || {};
+__WXML_GLOBAL__.ops_init = __WXML_GLOBAL__.ops_init || {};
+var z=__WXML_GLOBAL__.ops_set.$gwx47_XC_1 || [];
+function gz$gwx47_XC_1_1(){
+if( __WXML_GLOBAL__.ops_cached.$gwx47_XC_1_1)return __WXML_GLOBAL__.ops_cached.$gwx47_XC_1_1
+__WXML_GLOBAL__.ops_cached.$gwx47_XC_1_1=[];
+(function(z){var a=11;function Z(ops){z.push(ops)}
+Z([3,'container'])
+Z([[2,'&&'],[[7],[3,'isLoading']],[[2,'!'],[[7],[3,'showFallbackTip']]]])
+Z([[7],[3,'showFallbackTip']])
+Z([3,'retry-tip-area'])
+Z([[2,'!'],[[7],[3,'showRetryButton']]])
+Z([[7],[3,'showRetryButton']])
+Z(z[5])
+})(__WXML_GLOBAL__.ops_cached.$gwx47_XC_1_1);return __WXML_GLOBAL__.ops_cached.$gwx47_XC_1_1
+}
+__WXML_GLOBAL__.ops_set.$gwx47_XC_1=z;
+__WXML_GLOBAL__.ops_init.$gwx47_XC_1=true;
+var x=['./packages/waimai-self-pick/transit/index.wxml'];d_[x[0]]={}
+var m0=function(e,s,r,gg){
+var z=gz$gwx47_XC_1_1()
+var tSB=_n('view')
+_rz(z,tSB,'class',0,e,s,gg)
+var eTB=_v()
+_(tSB,eTB)
+if(_oz(z,1,e,s,gg)){eTB.wxVkey=1
+}
+var bUB=_v()
+_(tSB,bUB)
+if(_oz(z,2,e,s,gg)){bUB.wxVkey=1
+var xWB=_n('view')
+_rz(z,xWB,'class',3,e,s,gg)
+var oXB=_v()
+_(xWB,oXB)
+if(_oz(z,4,e,s,gg)){oXB.wxVkey=1
+}
+var fYB=_v()
+_(xWB,fYB)
+if(_oz(z,5,e,s,gg)){fYB.wxVkey=1
+}
+oXB.wxXCkey=1
+fYB.wxXCkey=1
+_(bUB,xWB)
+}
+var oVB=_v()
+_(tSB,oVB)
+if(_oz(z,6,e,s,gg)){oVB.wxVkey=1
+}
+eTB.wxXCkey=1
+bUB.wxXCkey=1
+oVB.wxXCkey=1
+_(r,tSB)
+return r
+}
+e_[x[0]]={f:m0,j:[],i:[],ti:[],ic:[]}
+if(path&&e_[path]){
+return function(env,dd,global){$gwxc=0;var root={"tag":"wx-page"};root.children=[]
+;g="$gwx47_XC_1";var main=e_[path].f
+if (typeof global==="undefined")global={};global.f=$gdc(f_[path],"",1);
+try{
+main(env,{},root,global);
+_tsd(root)
+}catch(err){
+console.log(err)
+}
+;g="";
+return root;
+}
+}
+}
+}(__g.a,__g.b,__g.c,__g.d,__g.e,__g.f,__g.g,__g.h,__g.i,__g.j,__g.k,__g.l,__g.m,__g.n,__g.o,__g.p,__g.q,__g.r,__g.s,__g.t,__g.u,__g.v,__g.w,__g.x,__g.y,__g.z,__g.A,__g.B,__g.C,__g.D,__g.E,__g.F,__g.G,__g.H,__g.I,__g.J,__g.K,__g.L,__g.M,__g.N,__g.O,__g.P,__g.Q,__g.R,__g.S,__g.T,__g.U,__g.V,__g.W,__g.X,__g.Y,__g.Z,__g.aa);if(__vd_version_info__.delayedGwx||false)$gwx47_XC_1();	if (__vd_version_info__.delayedGwx) __wxAppCode__['packages/waimai-self-pick/transit/index.wxml'] = [$gwx47_XC_1, './packages/waimai-self-pick/transit/index.wxml'];else __wxAppCode__['packages/waimai-self-pick/transit/index.wxml'] = $gwx47_XC_1( './packages/waimai-self-pick/transit/index.wxml' );
+	;__wxRoute = "packages/waimai-self-pick/transit/index";__wxRouteBegin = true;__wxAppCurrentFile__="packages/waimai-self-pick/transit/index.js";define("packages/waimai-self-pick/transit/index.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e,r=require("../../../@babel/runtime/helpers/regeneratorRuntime"),t={665:function(e,t,n){var o=n(203)(n(29)),a=n(295),s=n(378),i=require("../../../api/analytics").event;Page({data:{showRetryButton:!1,isLoading:!1,showFallbackTip:!1,fallbackTipText:a.ERROR_CODES.DEFAULT_MESSAGE},onLoad:function(e){if(!e)return this.showInfo(a.ERROR_CODES.DEFAULT_MESSAGE),void(0,a.reportBusinessSuccess)(this.scene,0);if(this.scene=e.scene||"poi_shop_scan",this.requestId=e.requestId||"",e.q)try{var r=decodeURIComponent(e.q||"");if(r){var t=r.indexOf("?");if(-1!==t){var n=r.substring(t+1),o=(0,a.parseQueryString)(n);this.scene=o&&o.scene||this.scene,this.requestId=o&&o.requestId||this.requestId}}}catch(e){global.mmb.logInfo&&global.mmb.logInfo("decodeURIComponent失败",JSON.stringify(e))}if(!this.requestId){var s={tag:"paramError",content:"无效的requestId: ".concat(this.requestId)};return this.handleErrorCode(s),void this.showInfo(a.ERROR_CODES.DEFAULT_MESSAGE)}this.sendRequest()},onShow:function(){i({event_type:"pageview",cid:s.LxConfigs.Cids.SCAN_PAGE_CID,val_lab:{custom:{page_source:"scan"}}})},handleErrorCode:function(e){(0,a.handlePageError)(this,e)},showInfo:function(e){var r=arguments.length>1&&void 0!==arguments[1]&&arguments[1];this.setData({showFallbackTip:!0,fallbackTipText:e,isLoading:!1,showRetryButton:r})},sendRequest:function(){var e=this;return(0,o.default)(r().mark((function t(){var n,o,s;return r().wrap((function(r){for(;;)switch(r.prev=r.next){case 0:return e.setData({isLoading:!0,showFallbackTip:!1}),r.prev=1,r.next=4,(0,a.customGetShopScanInfo)({scene:e.scene,requestId:e.requestId,channelSource:"WX"},(function(e){if(e&&e.data)return e;throw new Error("数据不完整".concat(e))}));case 4:n=r.sent,o="",r.prev=6,o=JSON.parse(n.data).wxRawScheme||"",r.next=13;break;case 10:return r.prev=10,r.t0=r.catch(6),r.abrupt("return",(global.mmb.logInfo&&global.mmb.logInfo("数据解析失败",JSON.stringify(r.t0)),void e.showInfo(a.ERROR_CODES.DEFAULT_MESSAGE,!0)));case 13:if(""!==o){r.next=16;break}return global.mmb.logInfo&&global.mmb.logInfo("下发跳链为空字符串"),r.abrupt("return",(e.handleErrorCode({tag:"schemeError",content:"下发跳链为空"}),void e.showInfo(a.ERROR_CODES.DEFAULT_MESSAGE,!0)));case 16:try{global.mmb.logInfo&&global.mmb.logInfo("开始跳转，跳链：".concat(o)),wx.redirectTo({url:o,success:function(){e.handleErrorCode({tag:"redirectTo",result:!0})},fail:function(r){var t={tag:"redirectTo",result:!1,content:r};e.handleErrorCode(t)}})}catch(r){global.mmb.logInfo&&global.mmb.logInfo("跳转失败，回外卖首页",JSON.stringify(r)),s={tag:"redirectTo",result:!1,content:JSON.stringify(r)},e.handleErrorCode(s),wx.switchTab({url:"/pages/index/index"})}r.next=22;break;case 19:r.prev=19,r.t1=r.catch(1),global.mmb.logInfo&&global.mmb.logInfo("接口请求出错",JSON.stringify(r.t1)),e.handleErrorCode(r.t1);case 22:return r.prev=22,e.setData({isLoading:!1}),r.finish(22);case 25:case"end":return r.stop()}}),t,null,[[1,19,22,25],[6,10]])})))()},onRetry:function(){this.setData({isLoading:!0,showRetryButton:!1,showFallbackTip:!1}),this.sendRequest()}})},378:function(e){e.exports=require("./constants")},295:function(e){e.exports=require("./utils")}},n={};function o(e){var r=n[e];if(void 0!==r)return r.exports;var a=n[e]={exports:{}};return t[e](a,a.exports,o),a.exports}o.m=t,o.x=function(){var e=o.O(void 0,[222],(function(){return o(665)}));return o.O(e)},e=[],o.O=function(r,t,n,a){if(!t){var s=1/0;for(l=0;l<e.length;l++){t=e[l][0],n=e[l][1],a=e[l][2];for(var i=!0,c=0;c<t.length;c++)(!1&a||s>=a)&&Object.keys(o.O).every((function(e){return o.O[e](t[c])}))?t.splice(c--,1):(i=!1,a<s&&(s=a));if(i){e.splice(l--,1);var u=n();void 0!==u&&(r=u)}}return r}a=a||0;for(var l=e.length;l>0&&e[l-1][2]>a;l--)e[l]=e[l-1];e[l]=[t,n,a]},o.f={},o.e=function(e){return Promise.all(Object.keys(o.f).reduce((function(r,t){return o.f[t](e,r),r}),[]))},o.u=function(e){return"packages/waimai-self-pick/vendors.js"},o.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},function(){var e={839:1};o.O.require=function(r){return e[r]},o.f.require=function(r,t){e[r]||function(r){var t=r.modules,n=r.ids,a=r.runtime;for(var s in t)o.o(t,s)&&(o.m[s]=t[s]);a&&a(o);for(var i=0;i<n.length;i++)e[n[i]]=1;o.O()}(require("../vendors.js"))}}(),function(){var e=o.x;o.x=function(){return o.e(222),e()}}();var a=o.x();module.exports=a;
+},{isPage:true,isComponent:true,currentFile:'packages/waimai-self-pick/transit/index.js'});require("packages/waimai-self-pick/transit/index.js");

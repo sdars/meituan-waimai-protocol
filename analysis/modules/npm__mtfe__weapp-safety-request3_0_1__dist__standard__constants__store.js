@@ -1,0 +1,3 @@
+define("npm/mtfe/weapp-safety-request3_0_1/dist/standard/constants/store.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var E,T;exports.__esModule=!0,exports.STORE=void 0,exports.STORE=E,(T=E||(exports.STORE=E={})).INIT_OPTIONS="INIT_OPTIONS",T.INIT_PARAMS="INIT_PARAMS",T.SDK_INITED="SDK_INITED",T.HORN_CONFIG="HORN_CONFIG",T.REQUEST_INTERCEPTORS="REQUEST_INTERCEPTORS",T.RESPONSE_INTERCEPTORS="RESPONSE_INTERCEPTORS";
+},{isPage:false,isComponent:false,currentFile:'npm/mtfe/weapp-safety-request3_0_1/dist/standard/constants/store.js'});

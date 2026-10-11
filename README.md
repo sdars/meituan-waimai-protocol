@@ -43,7 +43,7 @@ examples/
 - `code` (wx.login 返回值) 是唯一需要真实微信环境的外部输入。
 - `wechatFingerprint` 由 `finger.g()` 纯 Python 生成, 无需设备。
 - 逆向分析原始产物见 `/root/YYB/work/逆向分析/2026-10-11/meituan_waimai/`。
-- 解包后的代码包见 `/root/YYB/meituan-cashback/美团外卖_解包/`。
+- 解包后的代码包见本仓库 `美团外卖_解包/` (含 `general/` 原始 wxapkg 与 `unpacked/` 解包结果)。
 
 ## 与美团返返 (fanfan) 的差异
 

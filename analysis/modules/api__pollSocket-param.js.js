@@ -1,0 +1,3 @@
+define("api/pollSocket-param.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e=require("../utils/object-assign"),t=require("../store");module.exports=function(i){void 0===i&&(i={});var r=t.getState(),u=r.poi.id,o=r.buyTogether[u],s=o&&o.uTime?o.uTime:0;return e(i,{utime:s})};
+},{isPage:false,isComponent:false,currentFile:'api/pollSocket-param.js'});

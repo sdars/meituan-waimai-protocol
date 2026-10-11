@@ -1,0 +1,3 @@
+define("pages/login/login.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var r=require("../../utils/redirParam");Page({onLoad:function(e){wx.redirectTo({url:"/sub_inner_pages/login/login?"+r(e)})}});
+},{isPage:true,isComponent:true,currentFile:'pages/login/login.js'});

@@ -1,0 +1,1 @@
+{"component":true,"usingComponents":{"fstview":"./components/fstview/index","list":"./components/list/list","custom-component":"./index","element":"../../../../machpro/@wmfe/miniprogram-element/index","weapp-comp-privacy":"../../../../privacy/components/index"},"componentPlaceholder":{"element":"view"}}

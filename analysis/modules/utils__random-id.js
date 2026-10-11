@@ -1,0 +1,3 @@
+define("utils/random-id.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";module.exports=function(){var x=Date.now();return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(r){var t=(x+16*Math.random())%16|0;return x=Math.floor(x/16),("x"===r?t:3&t|8).toString(16)}))};
+},{isPage:false,isComponent:false,currentFile:'utils/random-id.js'});

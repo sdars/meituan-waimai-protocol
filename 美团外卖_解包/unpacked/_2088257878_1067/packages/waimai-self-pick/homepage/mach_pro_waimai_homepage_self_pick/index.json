@@ -1,0 +1,1 @@
+{"component":true,"navigationBarTitleText":"Mach落地页","navigationStyle":"custom","usingComponents":{"element":"../../../../machpro/@wmfe/miniprogram-element/index","custom-component":"./custom-component/index","weapp-comp-privacy":"../../../../privacy/components/index"},"componentPlaceholder":{"element":"view"}}

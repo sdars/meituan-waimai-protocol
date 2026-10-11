@@ -1,0 +1,3 @@
+define("npm/wmfe/wxapp-component-utils0_5_2/src/wx/login.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=require("../polyfill/promisify");exports.login=function(){return e.promisify(wx.login)({})};
+},{isPage:false,isComponent:false,currentFile:'npm/wmfe/wxapp-component-utils0_5_2/src/wx/login.js'});

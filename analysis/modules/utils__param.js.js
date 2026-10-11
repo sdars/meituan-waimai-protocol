@@ -1,0 +1,3 @@
+define("utils/param.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e=require("../@babel/runtime/helpers/typeof");module.exports=function(n){for(var o=Object.keys(n),r=[],t=o.length-1;t>-1;--t){var u=o[t],i=n[u];""!==i&&null!=i&&(i&&"object"===e(i)&&(i=JSON.stringify(i)),r.push(encodeURIComponent(u)+"="+encodeURIComponent(i)))}return r.join("&")};
+},{isPage:false,isComponent:false,currentFile:'utils/param.js'});

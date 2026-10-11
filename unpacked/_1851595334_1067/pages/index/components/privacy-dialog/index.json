@@ -1,0 +1,1 @@
+ty(Boolean.prototype,"nv_toString",{writable:true,value:Boolean.prototype.toString});Object.define

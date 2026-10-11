@@ -1,0 +1,3 @@
+define("mmb/wx/mmb.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";exports.__esModule=!0,exports.default=void 0;var t={options:{},init:function(o){Object.assign(t.options,o),t.options.loginSdk},extend:function(o,n){t[o],t[o]=n}};t.loadPlugin=function(o){return o(t)};var o=t;exports.default=o;
+},{isPage:false,isComponent:false,currentFile:'mmb/wx/mmb.js'});

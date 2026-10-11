@@ -1,0 +1,1 @@
+{"component":true,"usingComponents":{"list":"./components/list","sticky":"./components/sticky/index","wxswiper":"./components/swiper/index","wximage":"./components/wximage/index","custom-component":"./index","element":"../../../../../machpro/@wmfe/miniprogram-element/index","weapp-comp-privacy":"../../../../../privacy/components/index"}}

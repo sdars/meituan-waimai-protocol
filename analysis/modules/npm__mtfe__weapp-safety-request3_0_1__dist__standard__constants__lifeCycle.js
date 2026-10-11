@@ -1,0 +1,3 @@
+define("npm/mtfe/weapp-safety-request3_0_1/dist/standard/constants/lifeCycle.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";var e,E;exports.__esModule=!0,exports.LIFECYCLE=void 0,exports.LIFECYCLE=e,(E=e||(exports.LIFECYCLE=e={})).BEFORE_ADD_PARAMS="before-add-params",E.AFTER_ADD_PARAMS="after-add-params",E.BEFORE_REQUEST="before-request",E.AFTER_REQUEST="after-request",E.BEFORE_VERIFY="before-verify",E.AFTER_VERIFY="after-verify";
+},{isPage:false,isComponent:false,currentFile:'npm/mtfe/weapp-safety-request3_0_1/dist/standard/constants/lifeCycle.js'});

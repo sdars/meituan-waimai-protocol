@@ -1,0 +1,3 @@
+define("npm/mtfe/weapp-safety-request3_0_1/dist/standard/utils/builtin.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";exports.__esModule=!0,exports.initBuiltin=function(s){(0,t.registerRequestInterceptor)(s,(0,r.createRequestInterceptor)(s)),(0,t.registerResponseInterceptor)(s,(0,e.createResponseInterceptor)(s))};var e=require("../mtcp/response"),r=require("../mtcp/request"),t=require("./store");
+},{isPage:false,isComponent:false,currentFile:'npm/mtfe/weapp-safety-request3_0_1/dist/standard/utils/builtin.js'});

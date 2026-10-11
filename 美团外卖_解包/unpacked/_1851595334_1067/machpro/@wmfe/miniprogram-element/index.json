@@ -1,0 +1,1 @@
+{"component":true,"usingComponents":{"element":"./index","element-vhost":"./index-vhost","modal":"./comp/modal/index","nview":"./comp/nview/index","nimage":"./comp/nimage/index","weapp-comp-privacy":"../../../privacy/components/index"},"componentGenerics":{"custom-component":{"default":"./custom-component/index"}}}

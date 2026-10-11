@@ -1,0 +1,3 @@
+define("api/default-preview-key.js",function(require,module,exports,window,document,frames,self,location,navigator,localStorage,history,Caches,screen,alert,confirm,prompt,XMLHttpRequest,WebSocket,Reporter,webkit,WeixinJSCore){
+"use strict";module.exports={default_transfer_key:["food_list","cart_recommend_coupon_info","allowance_alliance_scenes","ap_params","ad_activity_flag","common_param","tag","sub_biz_type"]};
+},{isPage:false,isComponent:false,currentFile:'api/default-preview-key.js'});

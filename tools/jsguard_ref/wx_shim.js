@@ -1,0 +1,60 @@
+function noop(){}
+function cbSuccess(o,data){ if(o&&o.success) try{o.success(data)}catch(e){} if(o&&o.complete) try{o.complete(data)}catch(e){} }
+const storage={};
+global.wx={
+  canIUse:(s)=>true,
+  getStorageSync:(k)=>storage[k],
+  setStorageSync:(k,v)=>{storage[k]=v},
+  removeStorageSync:(k)=>{delete storage[k]},
+  getSystemInfoSync:()=>({platform:'ios',model:'iPhone 14',system:'iOS 17.0',brand:'Apple',version:'8.0.49',SDKVersion:'3.0.0',screenWidth:390,screenHeight:844,pixelRatio:3,windowWidth:390,windowHeight:844,statusBarHeight:47,language:'zh_CN',fontSizeSetting:16,benchmarkLevel:50,memorySize:2048,errMsg:'getSystemInfoSync:ok'}),
+  getSystemInfo:(o)=>cbSuccess(o,global.wx.getSystemInfoSync()),
+  getNetworkType:(o)=>cbSuccess(o,{networkType:'wifi',signalStrength:0,hasSystemProxy:false}),
+  getSetting:(o)=>cbSuccess(o,{authSetting:{'scope.userLocation':false}}),
+  getPrivacySetting:(o)=>cbSuccess(o,{needAuthorization:false}),
+  getAccountInfoSync:()=>({miniProgram:{appId:'wx2c348cf579062e56',envVersion:'release',version:'15.15.15'}}),
+  getAppBaseInfo:()=>({language:'zh_CN',version:'8.0.49',SDKVersion:'3.0.0',theme:'light',host:{}}),
+  getDeviceInfo:()=>({brand:'Apple',model:'iPhone 14',system:'iOS 17.0',platform:'ios'}),
+  getWindowInfo:()=>({pixelRatio:3,screenWidth:390,screenHeight:844,windowWidth:390,windowHeight:844,statusBarHeight:47,safeArea:{top:47,bottom:810,left:0,right:390,width:390,height:763},screenTop:0}),
+  getAppAuthorizeSetting:()=>({locationAuthorized:'authorized',bluetoothAuthorized:'authorized'}),
+  getBatteryInfo:(o)=>cbSuccess(o,{level:80,isCharging:false}),
+  getBatteryInfoSync:()=>({level:80,isCharging:false}),
+  getScreenBrightness:(o)=>cbSuccess(o,{value:80}),
+  getBeacons:(o)=>cbSuccess(o,{beacons:[]}),
+  getScreenRecordingState:(o)=>cbSuccess(o,{state:'off'}),
+  getGroupEnterInfo:(o)=>cbSuccess(o,{}),
+  getPublicLibVersion:()=>({system:'iOS 17.0'}),
+  getFileSystemManager:()=>({statSync:()=>({lastAccessTime:0,lastModifiedTime:0,mode:0,size:0})}),
+  getLaunchOptionsSync:()=>({path:'pages/index/index',scene:1001,query:{},referrerInfo:{}}),
+  getRealtimeLogManager:()=>({addFilterMsg:noop,info:noop,warn:noop,error:noop,setFilterMsg:noop}),
+  getNFCAdapter:undefined,
+  getWifiList:(o)=>cbSuccess(o,{wifiList:[]}),
+  startWifi:(o)=>cbSuccess(o,{}),
+  getConnectedWifi:(o)=>cbSuccess(o,{wifi:{}}),
+  onGetWifiList:noop,
+  onNetworkStatusChange:noop,
+  onUserCaptureScreen:noop,
+  onScreenRecordingStateChanged:noop,
+  onAccelerometerChange:noop,
+  onCompassChange:noop,
+  onGyroscopeChange:noop,
+  onDeviceMotionChange:noop,
+  onAppShow:noop,onAppHide:noop,
+  startAccelerometer:noop,startCompass:noop,startGyroscope:noop,
+  stopAccelerometer:noop,stopCompass:noop,stopGyroscope:noop,
+  checkPermission:(o)=>cbSuccess(o,{authorized:false}),
+  request:(o)=>cbSuccess(o,{statusCode:200,data:{},header:{}}),
+  login:(o)=>cbSuccess(o,{code:'testcode',errMsg:'login:ok'}),
+  getClipboardData:(o)=>cbSuccess(o,{data:''}),
+  getUserProfile:(o)=>cbSuccess(o,{}),
+  getUserInfo:(o)=>cbSuccess(o,{userInfo:{}}),
+  getUpdateManager:()=>({onCheckForUpdate:noop,onUpdateReady:noop,onUpdateFailed:noop,applyUpdate:noop}),
+  reportEvent:noop,reportAnalytics:noop,
+  setEnableDebug:noop,getLogManager:()=>({log:noop,info:noop,warn:noop,debug:noop}),
+  env:{USER_DATA_PATH:'/tmp/udp'},
+};
+global.WeixinJSBridge={invoke:noop,call:noop,on:noop,subscribeHandler:noop};
+global.__wxConfig={debug:false,appId:'wx2c348cf579062e56'};
+global.getCurrentPages=()=>[{route:'pages/index/index',options:{}}];
+global.getApp=()=>({globalData:{}});
+global.mmp=undefined;
+global.window=global;
