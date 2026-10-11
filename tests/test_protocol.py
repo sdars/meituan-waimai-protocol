@@ -158,6 +158,46 @@ def test_login_branch():
               e.code == 101144 and e.type == "user_has_risk", (e.code, e.type))
 
 
+def test_api_safety_layer():
+    """业务客户端: 默认 UA + safety-request url/header 注入 (addCommonParams)。"""
+    from meituan_waimai.api import (WaimaiClient, UserState, DEFAULT_UA,
+                                    PARAMS_POS_URL, PARAMS_POS_HEADER)
+
+    u = UserState(token="TOK", user_id="123", uuid="UUIDX",
+                  open_id="OID", open_id_cipher="OIDC", csec_version_name="15.15.15")
+    cli = WaimaiClient(user=u)
+    sp = u.safety_params()
+    check("safety url 注入齐全", all(sp.get(k) is not None for k in PARAMS_POS_URL), sp)
+    check("safety csecappid", sp.get("csecappid") == "wx2c348cf579062e56", sp.get("csecappid"))
+    check("safety csecversionname", sp.get("csecversionname") == "15.15.15")
+    check("safety header token/openId", sp.get("token") == "TOK" and sp.get("openId") == "OID")
+    check("safety csecuuid 回退 uuid", sp.get("csecuuid") == "UUIDX")
+    check("safety csecuserid", sp.get("csecuserid") == "123")
+
+    # request() 应把 url query + header 注入, 且带默认 UA
+    seen = {}
+
+    class _Sig:
+        def sign(self, method, url, data, header, now_ms=None):
+            seen["url"] = url
+            seen["header"] = header
+            return {"method": method.upper(), "url": url, "header": header, "data": data}
+
+    class _Resp:
+        status_code = 200
+        text = "{}"
+        def json(self):
+            return {"code": 0, "msg": "ok"}
+
+    cli.signer = _Sig()
+    cli.http = type("H", (), {"request": lambda self, *a, **k: _Resp()})()
+    cli.request("homeHead", data={})
+    check("request 带默认 UA", seen["header"].get("User-Agent") == DEFAULT_UA)
+    check("request url 注入 csecappid", "csecappid=wx2c348cf579062e56" in seen["url"], seen["url"])
+    check("request header 注入 token", seen["header"].get("token") == "TOK")
+    check("request header 注入 openId", seen["header"].get("openId") == "OID")
+
+
 def test_yyb_code_degrade():
     """yyb_code 依赖缺失时安全降级 (返回 None + 原因), 不抛异常。"""
     from meituan_waimai import yyb_code
@@ -180,6 +220,7 @@ if __name__ == "__main__":
     test_local_id()
     test_wechat_fingerprint()
     test_login_branch()
+    test_api_safety_layer()
     test_yyb_code_degrade()
     print("\n==== %d PASS / %d FAIL ====" % (len(PASS), len(FAIL)))
     if FAIL:

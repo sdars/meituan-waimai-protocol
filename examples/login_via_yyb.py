@@ -43,11 +43,13 @@ def main():
         print("    getWxIds 失败:", e)
         return
 
-    # 2) silentLogin: 再铸一个新 code + 纯 Python 指纹
+    # 2) silentLogin: 再铸一个新 code + 短指纹
+    #    短指纹 (WX__ver1.2.0_TEST) 可过 silentLogin 风控; 纯 Python 全量指纹
+    #    (254B 生成器) 会被 openresty WAF 403。详见 docs/登录链路与风控.md。
     code = get_wx_login_code(APP_ID)
-    fp = client.build_wechat_fingerprint()
+    fp = "WX__ver1.2.0_TEST"
     print("[2] silentLogin code =", code)
-    print("    wechatFingerprint =", fp[:60], "...")
+    print("    wechatFingerprint =", fp)
     try:
         result = client.silent_login(code, fp)
         print("    token?", bool(result.get("token")), "userId?", result.get("userId"))

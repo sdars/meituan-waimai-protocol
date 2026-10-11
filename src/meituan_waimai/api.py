@@ -6,8 +6,14 @@
   - 请求体: 合并 reducers/selectors/common-param.js 的公共参数 (wm_ctype 等) + 业务参数
     - 值为 object 的字段先 JSON.stringify
     - 值为 falsy (除 "0") 的字段删除
+  - @mtfe/weapp-safety-request addCommonParams: url 注入 yodaReady/csecappid/... ,
+    header 注入 token/csecuuid/csecuserid/openId/openIdCipher/...
+  - 默认 User-Agent (缺 UA 会被 openresty 边缘 WAF 403)
   - 所有请求在发出前经 jsguard.sign 注入 header.mtgsig
 接口路径取自 api/urls.js; 域由 api/domain-dispatcher.js 决定。
+
+双域差异: prod 域 (wx.waimai.meituan.com) 约 31/88 路径被出口 IP 级边缘 WAF 403;
+st 域 (wx.waimai.st.meituan.com) 全放行。详见 docs/接口文档.md §5。
 """
 from __future__ import annotations
 
@@ -15,7 +21,7 @@ import json
 import time
 from dataclasses import dataclass, field
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 import requests
 
@@ -42,6 +48,18 @@ DOMAINS = {
 WM_NAME = "wxapp"
 WM_VERSION = "10.39.01"          # constants.VERSION (小程序版本号)
 APP_ID = "wx2c348cf579062e56"
+
+# openresty 边缘 WAF: 缺 UA / python-requests 默认 UA 会被 403 (与 fanfan 同款)
+DEFAULT_UA = ("Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 "
+              "(KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.40(0x18002832) "
+              "NetType/WIFI Language/zh_CN miniProgram")
+
+# @mtfe/weapp-safety-request3.0.1 addCommonParams 注入位置 (constants/common.js PARAMS_POS)
+PARAMS_POS_URL = ["yodaReady", "csecappid", "csecplatform", "csecversionname", "csecversion"]
+PARAMS_POS_HEADER = ["token", "csecuuid", "csecdpid", "csecuserid",
+                     "openId", "openIdCipher", "eptoken", "csecepuid"]
+# safety-request defaultInitParams = {csecversion: VERSION(3.0.0)} + envParams{yodaReady, csecplatform}
+SAFETY_DEFAULT_PARAMS = {"csecversion": "3.0.0", "yodaReady": "wx", "csecplatform": 3}
 
 # --- api/urls.js (精选: 登录/用户/地址/首页/搜索/订单/支付/优惠券等) ----------
 API_URL = {
@@ -162,7 +180,45 @@ class UserState:
     lch: int = 0
     app_version: str = WM_VERSION      # wm_appversion
     env: str = "online"                # online|st|qa
+    # --- safety-request 层注入 (addCommonParams) ---
+    open_id: str | None = None         # header.openId
+    open_id_cipher: str | None = None  # header.openIdCipher
+    csec_uuid: str | None = None       # header.csecuuid (= wm_uuid/lxcuid)
+    csec_version_name: str | None = None  # url.csecversionname (小程序版本)
+    csec_version: str = "3.0.0"        # url.csecversion (sdk 版本)
+    csec_platform: int = 3             # url.csecplatform (3=WX)
+    csec_app_id: str | None = None     # url.csecappid
+    csec_dp_id: str | None = None      # header.csecdpid
+    ep_token: str | None = None        # header.eptoken
+    csec_ep_uid: str | None = None     # header.csecepuid
     extra: dict = field(default_factory=dict)
+
+    def safety_params(self) -> dict:
+        """合并 safety-request 层的 url/header 待注入参数 (addCommonParams)。"""
+        p = dict(SAFETY_DEFAULT_PARAMS)
+        p["csecappid"] = self.csec_app_id or APP_ID
+        p["csecversion"] = self.csec_version
+        p["csecplatform"] = self.csec_platform
+        if self.csec_version_name:
+            p["csecversionname"] = self.csec_version_name
+        if self.token:
+            p["token"] = self.token
+        csecuuid = self.csec_uuid or self.uuid
+        if csecuuid:
+            p["csecuuid"] = csecuuid
+        if self.user_id:
+            p["csecuserid"] = str(self.user_id)
+        if self.open_id:
+            p["openId"] = self.open_id
+        if self.open_id_cipher:
+            p["openIdCipher"] = self.open_id_cipher
+        if self.csec_dp_id:
+            p["csecdpid"] = self.csec_dp_id
+        if self.ep_token:
+            p["eptoken"] = self.ep_token
+        if self.csec_ep_uid:
+            p["csecepuid"] = self.csec_ep_uid
+        return p
 
 
 class WaimaiClient:
@@ -227,7 +283,8 @@ class WaimaiClient:
         return body
 
     def request(self, api: str, data: dict | None = None, method: str | None = None,
-                raw_path: str | None = None, now_ms: int | None = None) -> dict:
+                raw_path: str | None = None, now_ms: int | None = None,
+                apply_safety: bool = True) -> dict:
         path = raw_path if raw_path is not None else API_URL.get(api, api)
         url = self.base_url + path
         if method is None:
@@ -235,9 +292,19 @@ class WaimaiClient:
         header = {
             "R2X-Referer": "https://servicewechat.com/%s/0/page-frame.html" % APP_ID,
             "content-type": "application/x-www-form-urlencoded",
+            "User-Agent": DEFAULT_UA,
         }
         if self.user.uuid:
             header["uuid"] = self.user.uuid
+        # @mtfe/weapp-safety-request addCommonParams: url query + header 注入
+        if apply_safety:
+            sp = self.user.safety_params()
+            q = [(k, sp[k]) for k in PARAMS_POS_URL if sp.get(k) is not None]
+            if q:
+                url = url + ("&" if "?" in url else "?") + urlencode(q)
+            for k in PARAMS_POS_HEADER:
+                if sp.get(k) is not None:
+                    header.setdefault(k, sp[k])
         body = self._build_body(data, now_ms)
         signed = self.signer.sign(method, url, body, header, now_ms=now_ms)
         if signed["method"].upper() == "GET":

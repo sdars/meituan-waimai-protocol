@@ -27,6 +27,8 @@ docs/
   算法原理.md / 接口文档.md / 登录链路与风控.md
 examples/
   login_flow.py / login_via_yyb.py / probe_login.py / business_api.py
+  full_chain.py         全链路闭合 (YYB 铸码 -> 登录 -> 业务接口, 默认 st 域)
+  probe_all_apis.py     全量 88 接口探测 (prod/st 双域对照)
   diagnose_account.py   账号诊断 (YYB 会话 rt/at/scope + 美团 appid 铸码能力)
 ```
 
@@ -67,8 +69,27 @@ cd /root/YYB/meituan-waimai
 - `code` (wx.login 返回值) 是唯一需要真实微信环境的外部输入。
 - `wechatFingerprint` 由 `finger.g()` 纯 Python 生成, 无需设备。
 - **登录闭环实测**: 用 YYB 会话可铸出原生 `wx.login` code, `getWxIds` 稳定通过;
-  `silentLogin` 受美团行为风控 (`101144 user_has_risk`) 限制。详见
+  `silentLogin` 用**短指纹** (`WX__ver1.2.0_TEST`) 可过并返回真实 token;
+  全量指纹会被 openresty WAF 403。详见
   [`docs/登录链路与风控.md`](docs/登录链路与风控.md)。
+- **业务接口全链路实测**: 拿到 token 后, 全量 88 个业务接口在 **st 域**
+  (`wx.waimai.st.meituan.com`) **全部放行** (403=0); prod 域
+  (`wx.waimai.meituan.com`) 约 31/88 路径被**出口 IP 级边缘 WAF** 403
+  (poi/search/order/coupon 等), 与签名/UA/safety 参数无关。详见
+  [`docs/接口文档.md`](docs/接口文档.md) §5。
+
+## 全链路跑通
+
+```bash
+cd /root/YYB/meituan-waimai
+# 铸码 -> 登录 -> 业务接口 (默认 st 域, 期望全绿)
+/root/Knight/.venv/bin/python examples/full_chain.py
+# 全量 88 接口 (st 域 403=0 / prod 域 403≈31)
+/root/Knight/.venv/bin/python examples/probe_all_apis.py
+/root/Knight/.venv/bin/python examples/probe_all_apis.py --prod
+```
+
+前置: pcyyb 账号登录态需具备 `snsapi_runtime_pcsdk` scope (见 `docs/登录链路与风控.md` §2.1)。
 - 逆向分析原始产物见 `/root/YYB/work/逆向分析/2026-10-11/meituan_waimai/`。
 - 解包后的代码包见本仓库 `美团外卖_解包/` (含 `general/` 原始 wxapkg 与 `unpacked/` 解包结果)。
 

@@ -5,6 +5,8 @@
 
 - `examples/login_via_yyb.py` — YYB 铸码 → 完整登录（对应 `probe_full_login.py`）
 - `examples/probe_login.py`   — 指纹对照探测（对应 `probe_http_status.py` / `probe_order.py`）
+- `examples/full_chain.py`     — 全链路闭合（铸码 → 登录 → 业务接口，默认 st 域）
+- `examples/probe_all_apis.py`— 全量 88 接口双域探测（对应 `scripts/probe_*` 的业务侧扩展）
 
 ## 原始脚本
 
