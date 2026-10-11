@@ -27,6 +27,7 @@ docs/
   算法原理.md / 接口文档.md / 登录链路与风控.md
 examples/
   login_flow.py / login_via_yyb.py / probe_login.py / business_api.py
+  diagnose_account.py   账号诊断 (YYB 会话 rt/at/scope + 美团 appid 铸码能力)
 ```
 
 ## 快速开始
@@ -38,6 +39,28 @@ examples/
 # 依赖
 /root/Knight/.venv/bin/pip install -r requirements.txt
 ```
+
+## 账号诊断
+
+`examples/diagnose_account.py` 对「指定 / 批量 / 全部」YYB 账号做体检, 在 pcyyb
+的 rt/at 有效性 + 有效期 + scope + 授权能力之上, 追加本仓库最关键的判据:
+**该账号能否为外卖 appid `wx2c348cf579062e56` 铸出原生 wx.login code**。
+
+```bash
+cd /root/YYB/meituan-waimai
+# 单个账号 (open_id 或 json 路径)
+/root/Knight/.venv/bin/python examples/diagnose_account.py -a <open_id_or_json>
+# 一批 / 全部
+/root/Knight/.venv/bin/python examples/diagnose_account.py -a A -a B
+/root/Knight/.venv/bin/python examples/diagnose_account.py --all
+# 机器可读 / 只跑 pcyyb 侧
+/root/Knight/.venv/bin/python examples/diagnose_account.py --all --json
+/root/Knight/.venv/bin/python examples/diagnose_account.py --all --no-cast
+```
+
+输出: `open_id  scope_runtime=yes/no  buffer=OK/失效码  cast[<appid>]=OK <code>...`
+
+> pcyyb 侧完整诊断能力见 `pcyyb/protocol/docs/账号诊断.md`。
 
 ## 说明
 
