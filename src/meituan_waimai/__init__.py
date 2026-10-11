@@ -12,12 +12,14 @@ AppID: wx2c348cf579062e56
 """
 from .signer import Signer, build_w, build_pc
 from .api import WaimaiClient, UserState, API_URL, DOMAINS
-from .login import LoginClient, LoginConfig
+from .login import LoginClient, LoginConfig, LoginError
+from .yyb_code import get_wx_login_code, try_get_wx_login_code, YybUnavailable
 
 __all__ = [
     "Signer", "build_w", "build_pc",
     "WaimaiClient", "UserState", "API_URL", "DOMAINS",
-    "LoginClient", "LoginConfig",
+    "LoginClient", "LoginConfig", "LoginError",
+    "get_wx_login_code", "try_get_wx_login_code", "YybUnavailable",
 ]
 
 __version__ = "1.0.0"

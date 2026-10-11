@@ -19,13 +19,14 @@ src/meituan_waimai/
   signer.py      请求规范化 (build_w) + 签名器 Signer
   login.py       登录链路 (getWxIds / silentLogin / getMtInfo)
   api.py         业务接口客户端 (wx.waimai.meituan.com/weapp/*)
+  yyb_code.py    YYB(应用宝) 会话 -> 原生 wx.login code 铸码桥接 (软依赖)
 tests/
-  test_protocol.py   黄金向量逐字节比对 (27 项)
+  test_protocol.py   黄金向量逐字节比对 + 登录分支/降级 (34 项)
   fixtures/golden.json
 docs/
-  算法原理.md / 接口文档.md
+  算法原理.md / 接口文档.md / 登录链路与风控.md
 examples/
-  login_flow.py / business_api.py
+  login_flow.py / login_via_yyb.py / probe_login.py / business_api.py
 ```
 
 ## 快速开始
@@ -42,6 +43,9 @@ examples/
 
 - `code` (wx.login 返回值) 是唯一需要真实微信环境的外部输入。
 - `wechatFingerprint` 由 `finger.g()` 纯 Python 生成, 无需设备。
+- **登录闭环实测**: 用 YYB 会话可铸出原生 `wx.login` code, `getWxIds` 稳定通过;
+  `silentLogin` 受美团行为风控 (`101144 user_has_risk`) 限制。详见
+  [`docs/登录链路与风控.md`](docs/登录链路与风控.md)。
 - 逆向分析原始产物见 `/root/YYB/work/逆向分析/2026-10-11/meituan_waimai/`。
 - 解包后的代码包见本仓库 `美团外卖_解包/` (含 `general/` 原始 wxapkg 与 `unpacked/` 解包结果)。
 

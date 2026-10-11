@@ -50,6 +50,22 @@ GET_MT_INFO_FIELDS = ["id", "username", "avatarurl", "avatartype", "mobile",
                       "city", "cityid", "nickname"]
 
 
+class LoginError(RuntimeError):
+    """登录链路业务错误 (携带服务端原始响应, 便于区分 风控 / code / 签名)。"""
+
+    def __init__(self, message: str, resp: dict | None = None):
+        super().__init__(message)
+        self.resp = resp or {}
+
+    @property
+    def code(self):
+        return ((self.resp.get("error") or {}).get("code"))
+
+    @property
+    def type(self):
+        return ((self.resp.get("error") or {}).get("type"))
+
+
 @dataclass
 class LoginConfig:
     """来自 components/login-sdkV2/config.js + account-core init 的常量。"""
@@ -143,15 +159,26 @@ class LoginClient:
             if unionid_cipher:
                 self.wx_ids["unionIdCipher"] = unionid_cipher
             return self.wx_ids
-        raise RuntimeError("getwxinfo 失败: %s" % json.dumps(resp, ensure_ascii=False))
+        raise LoginError("getwxinfo 失败: %s" % json.dumps(resp, ensure_ascii=False), resp)
 
-    def silent_login(self, code: str, wechat_fingerprint: str) -> dict:
-        """silentLogin(): POST wxslientlogin {wechatFingerprint, code}。
+    def silent_login(self, code: str, wechat_fingerprint: str,
+                     token: str | None = None, net_check: bool = False) -> dict:
+        """silentLogin(): POST weappsilentlogin {wechatFingerprint, code[, token]}。
 
-        成功且返回 token/userId 时写入 self.auth。
+        对应 account-core silentLogin(e) 内层闭包:
+          - net_check=True 时走 newwxsilentlogin (weappsilentloginembedded),
+            否则走 wxslientlogin (weappsilentlogin);
+          - 已登录 (换绑/续期) 时附带 token;
+          - code 来自 wx.login (ce()), wechatFingerprint 来自 finger.g() ($())。
+
+        成功且返回 token/userId 时写入 self.auth; 服务端业务错误
+        (如 101144 user_has_risk) 以 LoginError 抛出, 携带原始响应。
         """
-        resp = self._g_form(PATHS["wxslientlogin"],
-                            {"wechatFingerprint": wechat_fingerprint, "code": code})
+        path = PATHS["newwxsilentlogin"] if net_check else PATHS["wxslientlogin"]
+        data = {"wechatFingerprint": wechat_fingerprint, "code": code}
+        if token:
+            data["token"] = token
+        resp = self._g_form(path, data)
         openid = resp.get("openId") or resp.get("openid")
         unionid = resp.get("unionId") or resp.get("unionid")
         data = resp.get("data") or {}
@@ -160,13 +187,21 @@ class LoginClient:
         if resp.get("unionIdCipher"):
             merged["unionIdCipher"] = resp["unionIdCipher"]
         if not openid and not unionid:
-            raise RuntimeError("weappsilentlogin 失败: %s" % json.dumps(resp, ensure_ascii=False))
+            raise LoginError("weappsilentlogin 失败: %s" % json.dumps(resp, ensure_ascii=False), resp)
+        if resp.get("error") and not merged.get("token"):
+            # 典型: {"code":101144,"type":"user_has_risk"} 行为风控
+            raise LoginError("weappsilentlogin 业务错误: %s" % json.dumps(resp, ensure_ascii=False), resp)
         if merged.get("token") and merged.get("userId"):
             self.auth = {"userId": merged["userId"], "token": merged["token"]}
             if openid:
                 self.wx_ids = {k: v for k, v in merged.items()
                                if k in ("openId", "openIdCipher", "unionId", "unionIdCipher")}
         return merged
+
+    def new_wx_silent_login(self, code: str, wechat_fingerprint: str,
+                            token: str | None = None) -> dict:
+        """newwxsilentlogin 分支 (netCheck=True), 走 weappsilentloginembedded。"""
+        return self.silent_login(code, wechat_fingerprint, token=token, net_check=True)
 
     def get_mt_info(self, token: str | None = None) -> dict:
         """ge(): GET getmtuserinfo?token=&fields=...。"""
@@ -178,7 +213,7 @@ class LoginClient:
             self.mt_info = {k: user.get(k) for k in
                             ("id", "username", "avatarurl", "mobile", "city", "cityid", "nickname")}
             return self.mt_info
-        raise RuntimeError("getmtuserinfo 失败: %s" % json.dumps(resp, ensure_ascii=False))
+        raise LoginError("getmtuserinfo 失败: %s" % json.dumps(resp, ensure_ascii=False), resp)
 
     def build_wechat_fingerprint(self, **kw) -> str:
         """纯 Python 生成 wechatFingerprint (finger.g())。"""
@@ -192,9 +227,15 @@ class LoginClient:
             kw.pop("system", {}), appid=self.cfg.app_id,
             dfpid=kw.pop("dfpid", "") or local_id, local_id=local_id, ts=ts, **kw)
 
-    def login(self, code: str, wechat_fingerprint: str, fetch_mt_info: bool = True) -> dict:
-        """完整静默登录: getWxIds -> silentLogin -> (可选) getMtInfo。"""
-        self.get_wx_ids(code)
+    def login(self, code: str, wechat_fingerprint: str, fetch_mt_info: bool = True,
+              skip_wx_ids: bool = False) -> dict:
+        """完整静默登录: getWxIds -> silentLogin -> (可选) getMtInfo。
+
+        skip_wx_ids=True 时跳过 getWxIds (真机流程中 silentLogin 前不单独调
+        getweappuserinfo, 直接拿 wx.login code 换 token)。
+        """
+        if not skip_wx_ids:
+            self.get_wx_ids(code)
         result = self.silent_login(code, wechat_fingerprint)
         if fetch_mt_info and self.auth.get("token"):
             try:

@@ -116,6 +116,61 @@ def test_wechat_fingerprint():
           "ext" not in obj and "sessionId" not in obj and obj["localid"] == "dfp123")
 
 
+def test_login_branch():
+    """登录分支: netCheck 走 newwxsilentlogin, 否则 wxslientlogin; 风控错误结构化。"""
+    from meituan_waimai import LoginClient, LoginConfig, LoginError
+    from meituan_waimai.login import PATHS
+
+    seen = []
+
+    class _Fake(LoginClient):
+        def _g_form(self, path, data, method="POST"):
+            seen.append((path, dict(data)))
+            # 返回带 token 的成功响应
+            return {"openId": "oid", "unionId": "uid",
+                    "data": {"userId": 1, "token": "tk"}}
+
+    c = _Fake(cfg=LoginConfig(), signer=None)
+    c.silent_login("CODE", "FP")
+    check("silentLogin 默认走 wxslientlogin", seen[-1][0] == PATHS["wxslientlogin"], seen[-1][0])
+    check("silentLogin body {fp, code}",
+          seen[-1][1] == {"wechatFingerprint": "FP", "code": "CODE"}, seen[-1][1])
+    check("silentLogin 写入 auth", c.auth == {"userId": 1, "token": "tk"}, c.auth)
+
+    c.new_wx_silent_login("CODE", "FP")
+    check("new_wx_silent_login 走 newwxsilentlogin",
+          seen[-1][0] == PATHS["newwxsilentlogin"], seen[-1][0])
+
+    c.silent_login("CODE", "FP", token="OLD")
+    check("silentLogin 已登录附带 token", seen[-1][1].get("token") == "OLD", seen[-1][1])
+
+    # 风控错误结构化
+    class _Risk(LoginClient):
+        def _g_form(self, path, data, method="POST"):
+            return {"openId": "oid", "unionId": "uid",
+                    "error": {"code": 101144, "type": "user_has_risk"}}
+
+    try:
+        _Risk(cfg=LoginConfig(), signer=None).silent_login("C", "F")
+        check("101144 抛 LoginError", False)
+    except LoginError as e:
+        check("101144 抛 LoginError 且带 code/type",
+              e.code == 101144 and e.type == "user_has_risk", (e.code, e.type))
+
+
+def test_yyb_code_degrade():
+    """yyb_code 依赖缺失时安全降级 (返回 None + 原因), 不抛异常。"""
+    from meituan_waimai import yyb_code
+    orig = (yyb_code.PCYYB_DIR, yyb_code.QQFARM_SRC)
+    try:
+        yyb_code.PCYYB_DIR = "/nonexistent/pcyyb"
+        yyb_code.QQFARM_SRC = "/nonexistent/qqfarm"
+        code, err = yyb_code.try_get_wx_login_code()
+        check("yyb 依赖缺失时降级为 (None, 原因)", code is None and err is not None, (code, err))
+    finally:
+        yyb_code.PCYYB_DIR, yyb_code.QQFARM_SRC = orig
+
+
 if __name__ == "__main__":
     test_vm()
     test_mtgsig()
@@ -124,6 +179,8 @@ if __name__ == "__main__":
     test_siua_roundtrip()
     test_local_id()
     test_wechat_fingerprint()
+    test_login_branch()
+    test_yyb_code_degrade()
     print("\n==== %d PASS / %d FAIL ====" % (len(PASS), len(FAIL)))
     if FAIL:
         print("FAILED:", FAIL)
